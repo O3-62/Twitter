@@ -10,7 +10,7 @@ export async function getTweets(res,req){
 }
 
 // 하나의 트윗을 가져오는 함수
-export async function getTweets(req,res,next){
+export async function getTweet(req,res,next){
     const userid = req.params.id;
     const data = await tweetRepository.getById(userid);
     if(data){

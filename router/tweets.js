@@ -1,7 +1,7 @@
 import express from "express";
 import { body} from 'express-validator';
-import * as tweetController from '../../Controller/tweet.js';
-import { validate } from '../middleware/validator';
+import * as tweetController from '../Controller/tweet.js';
+import { validate } from '../middleware/validator.js';
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ const validateTweet = [
 router.get('/',tweetController.getTweets);
 
  //트윗 찾기
-router.get('/:id',tweetController.getTweets);
+router.get('/:id',tweetController.getTweet);
 
 //트윗하기
 router.post('/',validateTweet,(req,res,next) => {
