@@ -1,8 +1,7 @@
-import express from "express";
-import { body, param, validationResult} from 'express-validator';
-import * as userInfoController from "../../Controller/auth.js";
-import { validate } from "../../middleware/validator.js";
-
+import express from 'express';
+import { body } from 'express-validator';
+import * as authController from '../controller/auth.js';
+import { validate } from '../middleware/validator';
 const router = express.Router();
 
 const validateInfo = [
@@ -28,7 +27,7 @@ router.post('/',validateInfo,(req,res,next) => {
 });
 
 //정보 찾기 아이디로
-router.get('/:id',userInfoController.checkInfo);
+router.get('/:id',authController.checkInfo);
 
 
 export default router;

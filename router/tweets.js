@@ -1,11 +1,9 @@
 import express from "express";
-import { body, param, validationResult} from 'express-validator';
+import { body} from 'express-validator';
 import * as tweetController from '../../Controller/tweet.js';
-import { validate } from "../../middleware/validator.js";
+import { validate } from '../middleware/validator';
 
 const router = express.Router();
-
-/**/
 
 const validateTweet = [
     body('text').trim().isLength({min:3}).withMessage('최소 3글자 이상 입력해야 합니다.'),validate];
