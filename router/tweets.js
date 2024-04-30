@@ -1,16 +1,24 @@
 import express from "express";
-import * as tweetController from '../Controller/tweet.js';
+import { body, param, validationResult} from 'express-validator';
+import * as tweetController from '../../Controller/tweet.js';
+import { validate } from "../../middleware/validator.js";
 
 const router = express.Router();
 
+/**/
+
+const validateTweet = [
+    body('text').trim().isLength({min:3}).withMessage('최소 3글자 이상 입력해야 합니다.'),validate];
+
+
 //트윗 찾기, 유저이름
-router.get('/',tweetConttroller.getTweets);
+router.get('/',tweetController.getTweets);
 
  //트윗 찾기
-router.get('/:id',tweetConttroller.getTweets);
+router.get('/:id',tweetController.getTweets);
 
 //트윗하기
-router.post('/',(req,res,next) => {
+router.post('/',validateTweet,(req,res,next) => {
     const {text, name, username} = req.body;
     const tweet = {
         id:'2',
@@ -23,7 +31,7 @@ router.post('/',(req,res,next) => {
     res.status(201).json(tweets);
 });
 
-router.put('/:id',(req,res,next) => {
+router.put('/:id',validateTweet,(req,res,next) => {
     const id = req.params.id;
     const text = req.body.text;
     const tweet = tweets.find((tweet) => tweet.id === id);
