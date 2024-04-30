@@ -1,10 +1,23 @@
 import exp from "constants";
 import * as userInfoRespository from "../Data/auth.js";
+import jwt from 'jsonwebtoken';
+import * as bcrypt from "bcrypt";
+
+const secret = 'abas213%@'
+
+async function makeToken(id){
+    const token = jwt.sign({
+    id: 'id',
+    isAdmin: false
+    },secret,{expiresIn:"30m"})
+    return token;
+}
 
 // 회원가입 함수!
 export async function signUp(req,res,next){
     const {id,username,password,name,email,url} = req.body;
-    const data = await userInfoRespository.userRegister(id,username,password,name,email,url);
+    const hashed = bcrypt.hashSync(password,10);
+    const data = await userInfoRespository.userRegister(id,username,hashed,password,name,email,url);
     if(data){res.status(201).json(data);}
 }
 
@@ -13,17 +26,16 @@ export async function login(req,res,next){
     const {username,password} = req.body;
     const user = await userInfoRespository.login(username);
     if(user){
+        if(bcrypt.compareSync(password,user.password)){
+            res.status(201).header('Token',makeToken())
         res.status(201).json(`${username} 로그인 완료`);
     }else{res.status(404).json({message : `${username} 아이디 및 비밀번호 확인`});
-}};
+}}
+};
 
-//로그인 정보 확인 함수
-export async function checkInfo(req,res,next){
-    const userid = req.params.id;
-    const data = await userInfoRespository.getInfoByUserId(userid);
-    if(data){
-        res.status(200).json(data)
-    }else{
-        res.status(404).json({message: `${id}의 회원가입 정보가 존재하지 않습니다.`});
+export async function verify(req,res,next){
+    const token = req.header['Token'];
+    if(token){
+        res.status(200).json(token);
     }
 }

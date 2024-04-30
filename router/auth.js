@@ -1,6 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
-import * as authController from '../controller/auth.js';
+import * as authController from '../Controller/auth.js';
 import { validate } from '../middleware/validator.js';
 const router = express.Router();
 
@@ -12,7 +12,7 @@ const validateInfo = [
     validate]
 
 //가입하기
-router.post('/',validateInfo,(req,res,next) => {
+router.post('/signup',validateInfo,(req,res,next) => {
     const {id,username,password,name,email,url} = req.body;
     const user = {
         id,
@@ -26,8 +26,9 @@ router.post('/',validateInfo,(req,res,next) => {
     res.status(201).json(users);
 });
 
-//정보 찾기 아이디로
-router.get('/:id',authController.checkInfo);
+//로그인
+router.get('/login',authController.login);
 
+router.get('/me', authController.verify);
 
 export default router;
