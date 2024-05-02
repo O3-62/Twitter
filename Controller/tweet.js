@@ -5,7 +5,7 @@ import * as tweetRepository from "../Data/tweet.js";
 //모든 트윗을 가져오는 함수
 export async function getTweets(res,req){
     const username = req.query.username;
-    const data = await(username ?tweetRepository.getAllByUsername(username):tweetRepository.getAll());
+    const data = await(username?tweetRepository.getAllByUsername(username):tweetRepository.getAll());
     res.status(200).json(data);
 }
 

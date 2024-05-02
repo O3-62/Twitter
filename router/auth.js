@@ -2,33 +2,27 @@ import express from 'express';
 import { body } from 'express-validator';
 import * as authController from '../Controller/auth.js';
 import { validate } from '../middleware/validator.js';
+import { isAuth } from '../middleware/auth.js';
+
 const router = express.Router();
 
-const validateInfo = [
-    body('id').trim().isLength({min:3}).withMessage('유저 아이디는 3글자 이상이어야 합니다.'),
-    body('username').trim().isLength({min:1}).withMessage('이름은 비울 수 없습니다.'),
-    body('password').matches(/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,15}$/).withMessage('비밀번호는 반드시 영문, 숫자, 특수문자 조합으로 이루어진 6~15자여야 합니다.'),
+const validateLogin = [
+    body('username').trim().notEmpty().withMessage(`username을 입력하세요.`),
+    body('password').trim().isLength({min:4}).withMessage(`password는 최소 4자 이상입니다.`),validate
+];
+
+const validateSignup = [
+    body('name').trim().notEmpty().withMessage('이름은 비울 수 없습니다.'),
     body('email').isEmail().withMessage('형식에 맞는 이메일을 입력하세요.'),
+    body('url').isURL().withMessage(`url의 형식을 확인하세요.`),
     validate]
 
 //가입하기
-router.post('/signup',validateInfo,(req,res,next) => {
-    const {id,username,password,name,email,url} = req.body;
-    const user = {
-        id,
-        username,
-        password,
-        name,
-        email,
-        url
-    };
-    users = [user, ...users];
-    res.status(201).json(users);
-});
+router.post('/signup',validateSignup,authController.signup);
 
 //로그인
-router.get('/login',authController.login);
+router.post('/login',validateLogin,authController.login);
 
-router.get('/me', authController.verify);
+router.get('/me', isAuth ,authController.me);
 
 export default router;
