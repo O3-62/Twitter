@@ -13,7 +13,7 @@ function required(key,defaultvalue=undefined){
 
 export const config = {
     jwt : {
-        secreatKey: required('JWT_SECRET'),
+        secreatkey: required('JWT_SECRET'),
         expiresInSec: parseInt(required('JWT_EXPIRES_SEC',172800))
     },
     bcrypt:{
@@ -21,5 +21,12 @@ export const config = {
     },
     host:{
         port:parseInt(required('HOST_PORT',8080))
+    },
+    db: {
+        host: required('DB_HOST'),
+        user: required('DB_USER'),
+        database:required('DB_DATABASE'),
+        password:required('DB_PASSWORD'),
+        port:required('DB_PORT')
     }
 };
