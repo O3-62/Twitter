@@ -2,19 +2,19 @@ import { config} from '../config.js';
 import * as authRepository from '../Data/auth.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { db } from '../db/database.js';
+import { sequelize } from '../db/database.js';
 
 function createJwtToken(id){
     return jwt.sign({id}, config.jwt.secreatkey, {expiresIn: config.jwt.expiresInSec});
 }
 export async function signup(req, res, next){
-    const {username, password, name, email, url} = req.body;
+    let {username, password, name, email, url} = req.body;
     const found = await authRepository.findByUsername(username);
     if(found){
         return res.status(409).json({message:`${username}이 이미 있습니다`});
     }
-    const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds);
-    const userId = await authRepository.createUser({username, hashed, name, email, url});
+    const Password = await bcrypt.hash(password, config.bcrypt.saltRounds);
+    const userId = await authRepository.createUser({username, Password, name, email, url});
     const token = createJwtToken(userId);
     res.status(201).json({token, username});
 }
