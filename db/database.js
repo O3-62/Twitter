@@ -1,10 +1,21 @@
-import  { config } from "../config.js";
-import SQ from 'sequelize';
+import { config } from 'dotenv';
+import MongoDb from 'mongodb';
 
-const {host, database, user, password, port} = config.db;
+let db;
 
-export const sequelize = new SQ.Sequelize(database, user, password,{
-    host,
-    dialext:'mysql',
-    logging:false // 데이터를 가져오거나 집어넣거나 등등 실행할 때
-});
+export async function connectDB(){
+    config(); // dotenv에서 환경 변수 로드
+
+    console.log(process.env.DB_HOST); // DB_HOST 환경 변수 출력
+
+    return MongoDb.MongoClient.connect(process.env.DB_HOST)
+        .then((client) => db = client.db());
+}
+
+export function getUsers(){
+    return db.collection('users');
+}
+
+export function getTweets(){
+    return db.collection('tweets');
+}

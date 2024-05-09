@@ -2,7 +2,6 @@ import { config} from '../config.js';
 import * as authRepository from '../Data/auth.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { sequelize } from '../db/database.js';
 
 function createJwtToken(id){
     return jwt.sign({id}, config.jwt.secreatkey, {expiresIn: config.jwt.expiresInSec});
@@ -26,7 +25,7 @@ export async function login(req, res, next){
     if(!user){
         return res.status(401).json({message: `아이디를 찾을 수 없음`});
     }
-    const isValidpassword = await bcrypt.compareSync(password, user.password);
+    const isValidpassword = bcrypt.compareSync(password, user.passwordHash);
     if(!isValidpassword){
         return res.status(401).json({message: `비밀번호가 틀렸음`});
     }

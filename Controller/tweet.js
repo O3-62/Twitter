@@ -1,6 +1,5 @@
 import exp from "constants";
 import * as tweetRepository from "../Data/tweet.js";
-import { sequelize } from '../db/database.js';
 
 
 //모든 트윗을 가져오는 함수
